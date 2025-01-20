@@ -24,6 +24,7 @@ const Index = () => {
   });
   const [invoiceDate, setInvoiceDate] = useState<Date>();
   const [shootDate, setShootDate] = useState<Date>();
+  const [clientName, setClientName] = useState("");
 
   const handleAddItem = () => {
     if (!currentItem.name || currentItem.cost <= 0) {
@@ -41,7 +42,21 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="bg-white shadow-sm rounded-lg p-6 space-y-6">
-          <h1 className="text-2xl font-semibold text-gray-900 text-center">Photography Invoice Generator</h1>
+          <h1 className="text-2xl font-semibold text-gray-900 text-center">Invoice Generator</h1>
+          
+          {/* Client Name Input */}
+          <div className="space-y-1">
+            <label htmlFor="client-name" className="text-sm font-medium text-gray-700">
+              Client Name
+            </label>
+            <Input
+              id="client-name"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
+              placeholder="Enter client name"
+              className="w-full"
+            />
+          </div>
           
           {/* Input Form */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 items-end">
@@ -172,6 +187,7 @@ const Index = () => {
             total={total}
             invoiceDate={invoiceDate}
             shootDate={shootDate}
+            clientName={clientName}
           />
         </div>
       </div>

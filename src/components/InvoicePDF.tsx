@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { PDFDownloadLink, Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import { format } from "date-fns";
 
 interface InvoiceItem {
@@ -13,6 +13,8 @@ interface InvoicePDFProps {
   total: number;
   invoiceDate?: Date;
   shootDate?: Date;
+  clientName: string;
+  logoPath?: string;
 }
 
 const styles = StyleSheet.create({
@@ -21,8 +23,21 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
   },
   header: {
-    fontSize: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  logo: {
+    width: 100,
+    height: 50,
+    objectFit: 'contain',
+  },
+  title: {
+    fontSize: 24,
+    textAlign: 'right',
+    flex: 1,
+    marginLeft: 20,
   },
   dates: {
     fontSize: 12,
@@ -64,10 +79,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const InvoicePDFDocument = ({ items, total, invoiceDate, shootDate }: InvoicePDFProps) => (
+const InvoicePDFDocument = ({ items, total, invoiceDate, shootDate, clientName, logoPath }: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <Text style={styles.header}>Photography Invoice</Text>
+      <View style={styles.header}>
+        {logoPath && <Image style={styles.logo} src={logoPath} />}
+        <Text style={styles.title}>{clientName}'s Invoice</Text>
+      </View>
       
       <View style={styles.dates}>
         <Text>Invoice Date: {invoiceDate ? format(invoiceDate, "PPP") : "Not specified"}</Text>
