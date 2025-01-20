@@ -114,13 +114,13 @@ const Index = () => {
                     <span className="text-gray-900">{item.name}</span>
                     <div className="flex space-x-4">
                       <span className="text-gray-600">Qty: {item.quantity}</span>
-                      <span className="text-gray-900">${(item.cost * item.quantity).toFixed(2)}</span>
+                      <span className="text-gray-900">EGP {(item.cost * item.quantity).toFixed(2)}</span>
                     </div>
                   </div>
                 ))}
                 <div className="flex justify-between items-center p-3 bg-gray-100 rounded-md font-medium">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>EGP {total.toFixed(2)}</span>
                 </div>
               </div>
             </div>

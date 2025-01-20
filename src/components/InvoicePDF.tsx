@@ -114,13 +114,13 @@ const InvoicePDFDocument = ({ items, total, invoiceDate, shootDate, clientName, 
               <Text style={styles.tableCell}>{item.quantity}</Text>
             </View>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>${(item.cost * item.quantity).toFixed(2)}</Text>
+              <Text style={styles.tableCell}>EGP {(item.cost * item.quantity).toFixed(2)}</Text>
             </View>
           </View>
         ))}
       </View>
 
-      <Text style={styles.total}>Total: ${total.toFixed(2)}</Text>
+      <Text style={styles.total}>Total: EGP {total.toFixed(2)}</Text>
     </Page>
   </Document>
 );
