@@ -11,6 +11,8 @@ interface InvoiceItem {
 interface InvoicePDFProps {
   items: InvoiceItem[];
   total: number;
+  discount: number;
+  totalAfterDiscount: number;
   invoiceDate?: Date;
   shootDate?: Date;
   clientName: string;
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const InvoicePDFDocument = ({ items, total, invoiceDate, shootDate, clientName, logoPath }: InvoicePDFProps) => (
+const InvoicePDFDocument = ({ items, total, discount, totalAfterDiscount, invoiceDate, shootDate, clientName, logoPath }: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
@@ -114,13 +116,15 @@ const InvoicePDFDocument = ({ items, total, invoiceDate, shootDate, clientName, 
               <Text style={styles.tableCell}>{item.quantity}</Text>
             </View>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>${(item.cost * item.quantity).toFixed(2)}</Text>
+              <Text style={styles.tableCell}>{(item.cost * item.quantity).toFixed(2)} EGP</Text>
             </View>
           </View>
         ))}
       </View>
 
-      <Text style={styles.total}>Total: ${total.toFixed(2)}</Text>
+      <Text style={styles.total}>Total before discount: {total.toFixed(2)} EGP</Text>
+      <Text style={styles.total}>Discount: {discount}%</Text>
+      <Text style={styles.total}>Total after discount: {totalAfterDiscount.toFixed(2)} EGP</Text>
     </Page>
   </Document>
 );
