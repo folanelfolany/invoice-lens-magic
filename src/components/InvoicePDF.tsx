@@ -118,7 +118,7 @@ const InvoicePDF = (props: InvoicePDFProps) => {
       fileName="photography-invoice.pdf"
     >
       {({ loading }) => (
-        <Button className="w-full" disabled={loading}>
+        <Button className="w-full" disabled={loading} type="button">
           {loading ? "Preparing PDF..." : "Download Invoice PDF"}
         </Button>
       )}
