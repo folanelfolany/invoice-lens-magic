@@ -21,18 +21,16 @@ const styles = StyleSheet.create({
   page: {
     padding: 30,
     fontFamily: 'Helvetica',
-    position: 'relative',
-    height: '100%',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
   },
   logo: {
-    width: 80,
-    height: 40,
+    width: 100,
+    height: 50,
     objectFit: 'contain',
   },
   title: {
@@ -79,25 +77,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'right',
   },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 30,
-    right: 30,
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
 });
 
 const InvoicePDFDocument = ({ items, total, invoiceDate, shootDate, clientName, logoPath }: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
-        <Image 
-          style={styles.logo} 
-          src="/lovable-uploads/c5ae70f8-a08e-4b34-8608-c55209682ea9.png"
-        />
+        {logoPath && <Image style={styles.logo} src={logoPath} />}
+        <Text style={styles.title}>{clientName}'s Invoice</Text>
       </View>
       
       <View style={styles.dates}>
@@ -127,17 +114,13 @@ const InvoicePDFDocument = ({ items, total, invoiceDate, shootDate, clientName, 
               <Text style={styles.tableCell}>{item.quantity}</Text>
             </View>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>EGP {(item.cost * item.quantity).toFixed(2)}</Text>
+              <Text style={styles.tableCell}>${(item.cost * item.quantity).toFixed(2)}</Text>
             </View>
           </View>
         ))}
       </View>
 
-      <Text style={styles.total}>Total: EGP {total.toFixed(2)}</Text>
-      
-      <View style={styles.footer}>
-        <Text>{clientName}'s Invoice</Text>
-      </View>
+      <Text style={styles.total}>Total: ${total.toFixed(2)}</Text>
     </Page>
   </Document>
 );
