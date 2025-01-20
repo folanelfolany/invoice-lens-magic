@@ -25,6 +25,7 @@ const Index = () => {
   const [invoiceDate, setInvoiceDate] = useState<Date>();
   const [shootDate, setShootDate] = useState<Date>();
   const [clientName, setClientName] = useState("");
+  const [discount, setDiscount] = useState<number>(0);
 
   const handleAddItem = () => {
     if (!currentItem.name || currentItem.cost <= 0) {
@@ -37,6 +38,7 @@ const Index = () => {
   };
 
   const total = items.reduce((sum, item) => sum + item.cost * item.quantity, 0);
+  const totalAfterDiscount = total - (total * discount) / 100;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -58,6 +60,79 @@ const Index = () => {
             />
           </div>
           
+          {/* Discount Input */}
+          <div className="space-y-1">
+            <label htmlFor="discount" className="text-sm font-medium text-gray-700">
+              Discount (%)
+            </label>
+            <Input
+              id="discount"
+              type="number"
+              value={discount}
+              onChange={(e) => setDiscount(Number(e.target.value))}
+              placeholder="Enter discount percentage"
+              className="w-full"
+            />
+          </div>
+
+          {/* Invoice Date Input */}
+          <div className="space-y-1">
+            <label htmlFor="invoice-date" className="text-sm font-medium text-gray-700">
+              Invoice Date
+            </label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !invoiceDate && "text-muted-foreground"
+                  )}
+                >
+                  {invoiceDate ? format(invoiceDate, "PPP") : "Pick a date"}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={invoiceDate}
+                  onSelect={setInvoiceDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          {/* Shoot Date Input */}
+          <div className="space-y-1">
+            <label htmlFor="shoot-date" className="text-sm font-medium text-gray-700">
+              Shoot Date
+            </label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !shootDate && "text-muted-foreground"
+                  )}
+                >
+                  {shootDate ? format(shootDate, "PPP") : "Pick a date"}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={shootDate}
+                  onSelect={setShootDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
           {/* Input Form */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 items-end">
             <div className="space-y-1">
@@ -79,9 +154,9 @@ const Index = () => {
               <Input
                 id="item-cost"
                 type="number"
-                value={currentItem.cost || ""}
-                onChange={(e) => setCurrentItem({ ...currentItem, cost: parseFloat(e.target.value) || 0 })}
-                placeholder="0.00"
+                value={currentItem.cost}
+                onChange={(e) => setCurrentItem({ ...currentItem, cost: Number(e.target.value) })}
+                placeholder="Cost per item"
                 className="w-full"
               />
             </div>
@@ -93,16 +168,15 @@ const Index = () => {
                 id="item-quantity"
                 type="number"
                 value={currentItem.quantity}
-                onChange={(e) => setCurrentItem({ ...currentItem, quantity: parseInt(e.target.value) || 1 })}
-                min="1"
+                onChange={(e) => setCurrentItem({ ...currentItem, quantity: Number(e.target.value) })}
+                placeholder="Quantity"
                 className="w-full"
               />
             </div>
+            <Button onClick={handleAddItem} className="w-full">
+              Add Item
+            </Button>
           </div>
-          
-          <Button onClick={handleAddItem} className="w-full">
-            Add Item
-          </Button>
 
           {/* Items List */}
           {items.length > 0 && (
@@ -114,77 +188,32 @@ const Index = () => {
                     <span className="text-gray-900">{item.name}</span>
                     <div className="flex space-x-4">
                       <span className="text-gray-600">Qty: {item.quantity}</span>
-                      <span className="text-gray-900">${(item.cost * item.quantity).toFixed(2)}</span>
+                      <span className="text-gray-900">{(item.cost * item.quantity).toFixed(2)} EGP</span>
                     </div>
                   </div>
                 ))}
                 <div className="flex justify-between items-center p-3 bg-gray-100 rounded-md font-medium">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>Total before discount</span>
+                  <span>{total.toFixed(2)} EGP</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-100 rounded-md font-medium">
+                  <span>Discount</span>
+                  <span>{discount}%</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-100 rounded-md font-medium">
+                  <span>Total after discount</span>
+                  <span>{totalAfterDiscount.toFixed(2)} EGP</span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Date Pickers */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700">Invoice Date</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !invoiceDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {invoiceDate ? format(invoiceDate, "PPP") : "Pick a date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={invoiceDate}
-                    onSelect={setInvoiceDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700">Shoot Date</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !shootDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {shootDate ? format(shootDate, "PPP") : "Pick a date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={shootDate}
-                    onSelect={setShootDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-
           {/* Generate PDF Button */}
           <InvoicePDF
             items={items}
             total={total}
+            discount={discount}
+            totalAfterDiscount={totalAfterDiscount}
             invoiceDate={invoiceDate}
             shootDate={shootDate}
             clientName={clientName}
