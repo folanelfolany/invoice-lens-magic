@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   page: {
     padding: 30,
     fontFamily: 'Helvetica',
+    position: 'relative',
   },
   header: {
     flexDirection: 'row',
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   tableHeader: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#6cd5ff',
   },
   tableCol: {
     width: '33.33%',
@@ -79,11 +80,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'right',
   },
+  watermark: {
+    position: 'absolute',
+    top: '30%',
+    left: '20%',
+    transform: 'translate(-50%, -50%) rotate(-45deg)',
+    fontSize: 72,
+    color: 'rgba(0, 0, 0, 0.1)',
+    textAlign: 'center',
+    zIndex: -1,
+  },
 });
 
 const InvoicePDFDocument = ({ items, total, discount, totalAfterDiscount, invoiceDate, shootDate, clientName, logoPath }: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
+      <Text style={styles.watermark}>BETA VERSION</Text>
       <View style={styles.header}>
         {logoPath && <Image style={styles.logo} src={logoPath} />}
         <Text style={styles.title}>{clientName}'s Invoice</Text>
